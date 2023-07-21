@@ -1,5 +1,3 @@
-
-
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
@@ -15,7 +13,7 @@ const firebaseConfig = {
   storageBucket: "runjida-34785.appspot.com",
   messagingSenderId: "197822458508",
   appId: "1:197822458508:web:0845a1135ed1f4b96a29a9",
-  measurementId: "G-P2E243BGKS"
+  measurementId: "G-P2E243BGKS",
 };
 
 // Initialize Firebase

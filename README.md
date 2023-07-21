@@ -4,7 +4,6 @@ Next Run Club is an social platform which allows runners to track, record and sh
 
 ## Screens
 
-
 /login
 
 /dashboard
@@ -12,21 +11,21 @@ Next Run Club is an social platform which allows runners to track, record and sh
 /new
 
 /r
-  /[username]
-
+/[username]
 
 - User Dashboard
 - Public Profile
 
-
 ## Data model
 
-### Run 
+### Run
+
 - distance
 - duration
 - timestamp
 
 ### Runner
+
 - email
 - password
 - username
