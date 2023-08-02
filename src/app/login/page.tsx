@@ -1,8 +1,6 @@
 "use client"; // This is a client component - allowing useState
 
 import { useState, FormEvent } from "react";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import Link from "next/link";
 
 /* styling notes:
