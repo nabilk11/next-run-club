@@ -1,8 +1,6 @@
 "use client"; // This is a client component - allowing useState
 
 import { useState, FormEvent } from "react";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
 import Link from "next/link";
 
 /* styling notes:
@@ -33,7 +31,6 @@ export default function Register() {
 
   return (
     <div className="flex min-h-screen flex-col relative bg-slate-900 text-white">
-      <Header />
       <main className="flex-1 flex flex-col p-4 justify-center items-center text-base sm:text-lg gap-2 sm:gap-4">
         <h1 className="font-extrabold text-2xl sm:text-4xl select-none">
           REGISTER
@@ -93,7 +90,6 @@ export default function Register() {
           </Link>
         </h2>
       </main>
-      <Footer />
     </div>
   );
 }
