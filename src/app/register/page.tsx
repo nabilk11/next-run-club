@@ -1,8 +1,16 @@
 "use client"; // This is a client component - allowing useState
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import Link from "next/link";
-
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { AppDispatch, useAppSelector } from "../redux/store";
+import { useRouter } from "next/navigation";
+import { auth } from "@/utils/firebase_client";
+import { useDispatch } from "react-redux";
 /* styling notes:
 - decide upon alternate styling w/o header for login/register pages
 - use react-toastify or other alerts for error/success messages
@@ -16,10 +24,20 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
+  const user = useAppSelector((state) => state.data.user.user);
+  const router = useRouter();
+
+  // use Next Router to send to dashboard if user exists already
+  useEffect(() => {
+    if (user) router.push("/dashboard");
+  }, [user]);
+
+  // redux dispatch function
+  const dispatch = useDispatch<AppDispatch>();
   // use HTMLButtonElement for onClick prop on Button
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!username || !email || !password || !confirmPassword) {
+    if (!email || !password || !confirmPassword) {
       setError("All fields are required!");
       return;
     }
@@ -27,6 +45,9 @@ export default function Register() {
       setError("Passwords do not match!");
       return;
     }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(signInWithEmailAndPassword(auth, email, password))
+      .then(updateProfile(auth.currentUser, { displayName: username }));
   };
 
   return (

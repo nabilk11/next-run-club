@@ -1,7 +1,11 @@
 "use client"; // This is a client component - allowing useState
 
-import { useState, FormEvent } from "react";
+import { useState, FormEvent, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { login, logout } from "../redux/features/authSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useAppSelector } from "../redux/store";
 
 /* styling notes:
 - decide upon alternate styling w/o header for login/register pages
@@ -13,6 +17,17 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  const user = useAppSelector((state) => state.data.user.user);
+  const router = useRouter();
+
+  // use Next Router to send to dashboard if user exists already
+  useEffect(() => {
+    if (user) router.push("/dashboard");
+  }, [user]);
+
+  // redux dispatch function
+  const dispatch = useDispatch<AppDispatch>();
 
   // use HTMLButtonElement for onClick prop on Button
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
