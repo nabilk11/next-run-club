@@ -1,24 +1,41 @@
 "use client";
 
-import useAuth from "@/hooks/useAuth";
 import { login, logout, setLoading } from "@/redux/features/authSlice";
 import { useAppSelector } from "@/redux/store";
+import { auth } from "@/utils/firebase_client";
+// import { signOut } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Header() {
+  const loggedInUser = useAppSelector((state) => state.data.user.user);
+  console.log(loggedInUser);
+
   const dispatch = useDispatch();
 
-  const { user: loggedInUser, isLoading: loading } = useAppSelector(
-    (state) => state.data.user,
-  );
-
-  const { signOut } = useAuth();
+  // dispatching user from firebase to Redux
+  useEffect(() => {
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        dispatch(
+          login({
+            // uid: authUser.uid,
+            username: authUser.displayName,
+            // email: authUser.email,
+          }),
+        );
+        dispatch(setLoading(false));
+      } else {
+        console.log("No user logged in");
+      }
+    });
+  }, []);
 
   const handleLogout = () => {
-    dispatch(logout());
-    signOut();
+    //   dispatch(logout());
+    //   signOut(auth);
   };
 
   return (
