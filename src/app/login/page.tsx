@@ -3,9 +3,11 @@
 import { useState, FormEvent, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { login, logout } from "../redux/features/authSlice";
+import { login, logout, setLoading } from "../redux/features/authSlice";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useAppSelector } from "../redux/store";
+import { auth } from "@/utils/firebase_client";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 /* styling notes:
 - decide upon alternate styling w/o header for login/register pages
@@ -20,14 +22,30 @@ export default function Login() {
 
   const user = useAppSelector((state) => state.data.user.user);
   const router = useRouter();
+  // redux dispatch function
+  const dispatch = useDispatch<AppDispatch>();
 
   // use Next Router to send to dashboard if user exists already
   useEffect(() => {
     if (user) router.push("/dashboard");
   }, [user]);
 
-  // redux dispatch function
-  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        dispatch(
+          login({
+            uid: authUser.uid,
+            username: authUser.displayName,
+            email: authUser.email,
+          }),
+        );
+        dispatch(setLoading(false));
+      } else {
+        console.log("No user logged in");
+      }
+    });
+  },[]);
 
   // use HTMLButtonElement for onClick prop on Button
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
@@ -36,6 +54,9 @@ export default function Login() {
       setError("Email and password are required!");
       return;
     }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((result) => console.log(result))
+      .catch((err) => setError(err));
   };
 
   return (

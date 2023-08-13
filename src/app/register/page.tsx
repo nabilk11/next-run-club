@@ -11,6 +11,7 @@ import { AppDispatch, useAppSelector } from "../redux/store";
 import { useRouter } from "next/navigation";
 import { auth } from "@/utils/firebase_client";
 import { useDispatch } from "react-redux";
+import { login, setLoading } from "../redux/features/authSlice";
 /* styling notes:
 - decide upon alternate styling w/o header for login/register pages
 - use react-toastify or other alerts for error/success messages
@@ -26,14 +27,33 @@ export default function Register() {
 
   const user = useAppSelector((state) => state.data.user.user);
   const router = useRouter();
+  // redux dispatch function
+  const dispatch = useDispatch<AppDispatch>();
 
   // use Next Router to send to dashboard if user exists already
   useEffect(() => {
     if (user) router.push("/dashboard");
   }, [user]);
 
-  // redux dispatch function
-  const dispatch = useDispatch<AppDispatch>();
+  // dispatching user from firebase to Redux
+  useEffect(() => {
+    auth.onAuthStateChanged((authUser) => {
+      if (authUser) {
+        dispatch(
+          login({
+            uid: authUser.uid,
+            username: authUser.displayName,
+            email: authUser.email,
+          }),
+        );
+        dispatch(setLoading(false));
+      } else {
+        console.log("No user logged in");
+      }
+    });
+  }, []);
+
+
   // use HTMLButtonElement for onClick prop on Button
   const handleSubmit = (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -47,7 +67,8 @@ export default function Register() {
     }
     createUserWithEmailAndPassword(auth, email, password)
       .then(signInWithEmailAndPassword(auth, email, password))
-      .then(updateProfile(auth.currentUser, { displayName: username }));
+      .then(updateProfile(auth.currentUser, { displayName: username }))
+      .catch((err) => setError(err));
   };
 
   return (
