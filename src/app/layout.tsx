@@ -3,7 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Footer from "@/components/Footer";
-import { ReduxProvider } from "./redux/provider";
+import { ReduxProvider } from "../redux/provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,14 +18,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // replace this with state variable with redux
-  const loggedIn = true;
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <ReduxProvider>
-          <Header loggedIn={loggedIn} />
+          <Header />
           {children}
           <Footer />
         </ReduxProvider>

@@ -38,7 +38,6 @@ export default function Login() {
       return;
     }
     signInWithEmailAndPassword(email, password);
-
   };
 
   return (

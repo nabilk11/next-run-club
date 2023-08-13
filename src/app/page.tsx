@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppSelector } from "./redux/store";
+import { useAppSelector } from "../redux/store";
 
 export default function Home() {
   const user = useAppSelector((state) => state.data.user);
